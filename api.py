@@ -96,6 +96,12 @@ def city_ratings():
     return jsonify(json.loads(content))
 
 
+@app.route('/crime')
+def crime():
+    with open(os.path.join(os.path.dirname(__file__), 'assaults.json')) as f:
+        content = f.read()
+
+    return jsonify(json.loads(content))
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
