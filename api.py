@@ -37,18 +37,18 @@ def translate(text):
         pass
 
 
-@app.route('/convert', methods=['GET'])
-def convert(value=10.0, _to='CAD', _from='INR'):
+@app.route('/convert/<val>/<_to>/<_from>', methods=['GET'])
+def convert(val, _to, _from):
     if request.method == 'GET':
-        print(value, _to, _from)
+        print(val, _to, _from)
         params = (
             ('from', _from),
             ('to', _to),
-            ('amount', value),
+            ('amount', val),
         )
 
         resp = re.get('https://xecdapi.xe.com/v1/convert_from.json/', params=params, auth=(xe_account_id, xe_api_key))
-        result = {"result": resp.json()["to"][0]["mid"]}
+        result = {"result": resp.json()["to"][0]["mid"], 'status': 'OK'}
 
         return jsonify(result)
 
