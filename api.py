@@ -3,6 +3,7 @@ import requests as re
 from flask import Flask, jsonify, request, redirect, url_for,session
 from flask_cors import CORS
 import json
+import six
 
 from werkzeug import secure_filename
 
@@ -40,7 +41,6 @@ def translate(text):
 @app.route('/convert/<val>/<_to>/<_from>', methods=['GET'])
 def convert(val, _to, _from):
     if request.method == 'GET':
-        print(val, _to, _from)
         params = (
             ('from', _from),
             ('to', _to),
@@ -53,6 +53,38 @@ def convert(val, _to, _from):
         return jsonify(result)
 
 
+@app.route('/translate/<target>/<text>')
+def translate_text(target, text):
+    """Translates text into the target language.
+
+    Target must be an ISO 639-1 language code.
+    See https://g.co/cloud/translate/v2/translate-reference#supported_languages
+    """
+    from google.cloud import storage
+    from google.cloud import translate
+
+    # Explicitly use service account credentials by specifying the private key
+    # file. All clients in google-cloud-python have this helper, see
+    # https://google-cloud-python.readthedocs.io/en/latest/core/modules.html
+    #   #google.cloud.client.Client.from_service_account_json
+    storage_client = storage.Client.from_service_account_json(
+        'service_account.json')
+
+    # Make an authenticated API request    
+    translate_client = translate.Client()
+
+    if isinstance(text, six.binary_type):
+        text = text.decode('utf-8')
+
+    # Text can also be a sequence of strings, in which case this method
+    # will return a sequence of results for each text.
+    result = translate_client.translate(
+        text, target_language=target)
+
+    return jsonify({'status': 'OK',
+                    'text': result['input'],
+                    'translation': result['translatedText'],
+                    'detected_source': result['detectedSourceLanguage']})
 
 
 if __name__ == '__main__':
