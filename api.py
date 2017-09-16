@@ -31,14 +31,6 @@ def helloWorld():
     return "Hello, world! <a href='https://github.com/rhnvrm/'>Fork me on GitHub!</a>"
 
 
-@app.route('/translate', methods=['GET'])
-def translate(text):
-    if request.method == 'GET':
-        input_text  = text
-        print(text)
-        pass
-
-
 @app.route('/convert/<val>/<_to>/<_from>', methods=['GET'])
 def convert(val, _to, _from):
     if request.method == 'GET':
@@ -99,6 +91,14 @@ def city_ratings():
 @app.route('/crime')
 def crime():
     with open(os.path.join(os.path.dirname(__file__), 'assaults.json')) as f:
+        content = f.read()
+
+    return jsonify(json.loads(content))
+
+
+@app.route('/pricy')
+def pricy():
+    with open(os.path.join(os.path.dirname(__file__), 'pricy.json')) as f:
         content = f.read()
 
     return jsonify(json.loads(content))
