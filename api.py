@@ -4,6 +4,7 @@ from flask import Flask, jsonify, request, redirect, url_for,session
 from flask_cors import CORS
 import json
 import six
+import pandas as pd
 
 from werkzeug import secure_filename
 
@@ -85,6 +86,15 @@ def translate_text(target, text):
                     'text': result['input'],
                     'translation': result['translatedText'],
                     'detected_source': result['detectedSourceLanguage']})
+
+
+@app.route('/city_ratings')
+def city_ratings():
+    with open(os.path.join(os.path.dirname(__file__), 'ratings.json')) as f:
+        content = f.read()
+
+    return jsonify(json.loads(content))
+
 
 
 if __name__ == '__main__':
