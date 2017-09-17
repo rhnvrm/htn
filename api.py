@@ -167,9 +167,9 @@ def suggest(loc, crime, price):
         l, c, p = dl[i][0], dl[i][1], dl[i][2]
         fl[i] = sqrt((l - loc)**2 + (c - crime)**2 + (p - price)**2)
 
-    result = {}
+    result = []
     for key in sorted(fl, key=lambda x: fl[x], reverse=False)[:5]:
-        result[key] = fl[key]
+        result+= [key]
 
     return jsonify({"result": result})
 
