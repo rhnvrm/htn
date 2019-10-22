@@ -116,7 +116,7 @@ pep8==1.7.0
 pexpect==4.2.0
 pickleshare==0.7.3
 pid==2.0.1
-Pillow==3.4.2
+Pillow==6.2.0
 ply==3.8
 powerline-status==2.5
 progress==1.2
